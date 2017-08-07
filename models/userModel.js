@@ -1,4 +1,4 @@
-//Model untuk pengguna sebagai dosen
+//Model untuk pengguna sebagai dosen dan mahasiswa
 var mongoose = require('mongoose');
 
 var Schema = mongoose.Schema;
