@@ -65,7 +65,7 @@ router.group("/poin", (router) => {
 });
 
 router.group("/daftar/proses", (router) => {
-    router.post("/guru", userController.daftar_proses_guru);
+    router.post("/dosen", userController.daftar_proses_dosen);
     router.post("/siswa", userController.daftar_proses_siswa);
 });
 
