@@ -55,7 +55,7 @@ exports.masuk = function(req,res) {
        if(results.length == 1){//Akun ditemukan
           var dataPengguna = {data: results}
           var username = dataPengguna.data[0].profil.username
-          var peran = dataPengguna.data[0].peran
+          var peran = dataPengguna.data[0].akademik.peran
           var idPengguna = dataPengguna.data[0]._id
 
           var generateAccessToken = randomAccessToken()
