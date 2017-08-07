@@ -14,7 +14,12 @@ var UserSchema = Schema({
     foto_profil: {type: String, default: 'http://filehosting.pptik.id/TESISS2ITB/Vidyanusa/default-profile-picture.png'}
   },
   akademik:{
-    peran: {type: Number, required: true}
+    peran: {type: Number, required: true},
+    jenjang: {},
+    universitas_prodi:{},
+    gelar: {type: String, default: '-'},
+    foto_ktm_ktp: {type: String, default: '-'},
+    nim_nip: {type: String, default: '-'}
   },
   created_at: { type: Date, default: Date.now},
   updated_at: { type: Date, default: Date.now}
