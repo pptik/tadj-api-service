@@ -6,6 +6,7 @@ var moment = require('moment');
 require('express-group-routes');
 
 var userController = require('../controllers/userController');
+var institusiController = require('../controllers/institusiController');
 var mapelController = require('../controllers/mapelController');
 var publicController = require('../controllers/publicController');
 
@@ -67,6 +68,10 @@ router.group("/poin", (router) => {
 router.group("/daftar/proses", (router) => {
     router.post("/dosen", userController.daftar_proses_dosen);
     router.post("/mahasiswa", userController.daftar_proses_mahasiswa);
+});
+
+router.group("/institusi", (router) => {
+    router.post("/daftar_mahasiswa", institusiController.daftar_mahasiswa);
 });
 
 router.group("/mapel", (router) => {

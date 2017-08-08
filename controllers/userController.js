@@ -675,7 +675,8 @@ exports.daftar_proses_mahasiswa = function(req,res) {
          }else{
 
            if(results.length == 1){//Email atau username sudah terdaftar
-             return res.json({success: false, data:[{message:'Email atau username sudah terdaftar'}]})
+             //return res.json({success: false, data: {message: 'Maaf email atau sandi anda salah.'}})
+             return res.json({success: false, data:[{msg:'Email atau username sudah terdaftar'}]})
            }else if(results.length == 0){//Email atau username bisa digunakan
              //Query simpan ke collection pengguna
              inputan.save(function(err){
@@ -842,7 +843,8 @@ exports.daftar_proses_dosen = function(req,res) {
          }else{
 
            if(results.length == 1){//Email atau username sudah terdaftar
-             return res.json({success: false, data:[{message:'Email atau username sudah terdaftar'}]})
+             return res.json({success: false, data:[{msg:'Email atau username sudah terdaftar'}]})
+             //return res.json({success: false, data: {message: 'Maaf email atau sandi anda salah.'}})
            }else if(results.length == 0){//Email atau username bisa digunakan
              //Query simpan ke collection pengguna
              inputan.save(function(err){
