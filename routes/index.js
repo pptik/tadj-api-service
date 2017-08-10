@@ -7,6 +7,7 @@ require('express-group-routes');
 
 var userController = require('../controllers/userController');
 var institusiController = require('../controllers/institusiController');
+var mahasiswaController = require('../controllers/mahasiswaController');
 var mapelController = require('../controllers/mapelController');
 var publicController = require('../controllers/publicController');
 
@@ -72,6 +73,11 @@ router.group("/daftar/proses", (router) => {
 
 router.group("/institusi", (router) => {
     router.post("/daftar_mahasiswa", institusiController.daftar_mahasiswa);
+    router.post("/daftar_mahasiswa/pending", institusiController.pending_daftar_mahasiswa);
+});
+
+router.group("/mahasiswa", (router) => {
+    router.post("/daftar_universitas", mahasiswaController.daftar_universitas);
 });
 
 router.group("/mapel", (router) => {
