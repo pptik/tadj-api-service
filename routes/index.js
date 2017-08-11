@@ -10,6 +10,7 @@ var institusiController = require('../controllers/institusiController');
 var mahasiswaController = require('../controllers/mahasiswaController');
 var mapelController = require('../controllers/mapelController');
 var publicController = require('../controllers/publicController');
+var jenjangController = require('../controllers/jenjangController');
 
 
 
@@ -36,9 +37,7 @@ router.group("/daftar_kelas", (router) => {
 })
 
 router.group("/pengaturan", (router) => {
-    router.post('/siswa/kelas/tambah', userController.siswa_kelas_tambah);
-    router.post('/siswa/prestasi/tambah', userController.siswa_prestasi_tambah);
-    router.post('/siswa/profil/ubah', userController.siswa_profil_ubah);
+
 })
 
 
@@ -47,14 +46,14 @@ router.get('/daftar_kegiatan', function(req, res, next) {
 });
 
 router.post('/profil', userController.get_profile)
-router.post('/profil/siswa', userController.get_profile_siswa)
+
 
 router.post('/masuk', userController.masuk);
 
 router.group("/android", (router) => {
-    router.post('/masuk', userController.masuk_android);
-    router.post("/daftar/proses/guru", userController.daftar_proses_guru_android);
-    router.post("/daftar/proses/siswa", userController.daftar_proses_siswa_android);
+    // router.post('/masuk', userController.masuk_android);
+    // router.post("/daftar/proses/guru", userController.daftar_proses_guru_android);
+    // router.post("/daftar/proses/siswa", userController.daftar_proses_siswa_android);
 });
 
 router.post('/keluar', userController.keluar);
@@ -72,8 +71,14 @@ router.group("/daftar/proses", (router) => {
 });
 
 router.group("/institusi", (router) => {
+    router.post("/daftar", institusiController.daftar);
     router.post("/daftar_mahasiswa", institusiController.daftar_mahasiswa);
     router.post("/daftar_mahasiswa/pending", institusiController.pending_daftar_mahasiswa);
+});
+
+router.group("/jenjang", (router) => {
+    router.post("/daftar", jenjangController.daftar);
+    router.post("/prodi", jenjangController.prodi);
 });
 
 router.group("/mahasiswa", (router) => {

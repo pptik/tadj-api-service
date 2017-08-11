@@ -7,7 +7,7 @@ var JenjangSchema = Schema({
   prodi: [{type: Schema.ObjectId, ref: 'prodi'}],
   created_at: { type: Date, default: Date.now},
   updated_at: { type: Date, default: Date.now}
-},{collection: 'prodi'});
+},{collection: 'jenjang'});
 
 //Export model
 module.exports = mongoose.model('jenjang', JenjangSchema);
