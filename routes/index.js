@@ -83,6 +83,7 @@ router.group("/jenjang", (router) => {
 
 router.group("/mahasiswa", (router) => {
     router.post("/daftar_universitas", mahasiswaController.daftar_universitas);
+    router.post("/tambah_institusi_pendidikan", mahasiswaController.tambah_institusi_pendidikan);
 });
 
 router.group("/mapel", (router) => {
