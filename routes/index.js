@@ -11,6 +11,7 @@ var mahasiswaController = require('../controllers/mahasiswaController');
 var mapelController = require('../controllers/mapelController');
 var publicController = require('../controllers/publicController');
 var jenjangController = require('../controllers/jenjangController');
+var prodiController = require('../controllers/prodiController');
 
 
 
@@ -23,7 +24,7 @@ router.group("/daftar_sekolah", (router) => {
 })
 
 router.group("/pengguna", (router) => {
-  router.post('/guru/sekolah', publicController.pengguna_guru_sekolah);
+  router.post('/ubah_sandi', userController.ubah_sandi);
 })
 
 router.group("/daftar_kelas", (router) => {
@@ -45,25 +46,19 @@ router.get('/daftar_kegiatan', function(req, res, next) {
 
 });
 
-router.post('/profil', userController.get_profile)
+router.group("/profil", (router) => {
+    router.post('/', userController.get_profile);
+    router.post('/ubah', userController.ubah_profile);
+})
+//router.post('/profil', userController.get_profile)
 
 
 router.post('/masuk', userController.masuk);
-
-router.group("/android", (router) => {
-    // router.post('/masuk', userController.masuk_android);
-    // router.post("/daftar/proses/guru", userController.daftar_proses_guru_android);
-    // router.post("/daftar/proses/siswa", userController.daftar_proses_siswa_android);
-});
 
 router.post('/keluar', userController.keluar);
 
 router.post('/cek_session', userController.cek_session);
 
-router.group("/poin", (router) => {
-    router.post("/tambah", userController.tambah_poin);
-    router.post("/daftar", userController.daftar_poin);
-});
 
 router.group("/daftar/proses", (router) => {
     router.post("/dosen", userController.daftar_proses_dosen);
@@ -73,8 +68,12 @@ router.group("/daftar/proses", (router) => {
 router.group("/institusi", (router) => {
     router.post("/daftar", institusiController.daftar);
     router.post("/daftar_mahasiswa", institusiController.daftar_mahasiswa);
-    router.post("/daftar_mahasiswa/pending", institusiController.pending_daftar_mahasiswa);
+    router.post("/konfirmasi/mahasiswa", institusiController.konfirmasi_mahasiswa);
+    router.post("/kelompok/tambah", institusiController.kelompok_tambah);
+    //router.post("/daftar_mahasiswa/pending", institusiController.pending_daftar_mahasiswa);
 });
+
+router.post('/prodi', prodiController.daftar);
 
 router.group("/jenjang", (router) => {
     router.post("/daftar", jenjangController.daftar);
@@ -91,10 +90,5 @@ router.group("/mapel", (router) => {
     router.post("/materi", mapelController.daftar_materi);
 });
 
-router.group("/kirim", (router) => {
-    router.post("/status", function(req, res, next) {
-
-    });
-});
 
 module.exports = router;

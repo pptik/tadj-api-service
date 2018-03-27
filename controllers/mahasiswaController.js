@@ -1,7 +1,7 @@
 //Import model
 var Mapel = require('../models/mapelModel');
 var Session = require('../models/sessionModel');
-var Pengguna = require('../models/userModel');
+var Pengguna = require('../models/userModelMahasiswa');
 
 //Import library
 var async = require('async');
@@ -10,67 +10,77 @@ var restClient = require('node-rest-client').Client;
 var rClient = new restClient();
 var base_api_url = 'http://localhost:3001';
 
+//Import functions
+const mahasiswaFunction = require('../functions/mahasiswaFunction');
+const sessionFunction = require('../functions/sessionFunction');
 
-exports.daftar_universitas = function(req,res) {
+//Import etc
+const global = require('../global.json');
+
+exports.daftar_universitas = function(req,res){
 
   //Inisial validasi
-  req.checkBody('accessToken', 'Akses token tidak boleh kosong').notEmpty();
-  req.checkBody('idPengguna', 'Id pengguna tidak boleh kosong').notEmpty();
+  req.checkBody('access_token', 'Akses token tidak boleh kosong').notEmpty();
+  req.checkBody('pengguna', 'Id pengguna tidak boleh kosong').notEmpty();
 
   //Dibersihkan dari Special Character
-  req.sanitize('accessToken').escape();
-  req.sanitize('idPengguna').escape();
+  req.sanitize('access_token').escape();
+  req.sanitize('pengguna').escape();
 
-  req.sanitize('accessToken').trim();
-  req.sanitize('idPengguna').trim();
+  req.sanitize('access_token').trim();
+  req.sanitize('pengguna').trim();
 
   //Menjalankan validasi
   var errors = req.validationErrors();
 
   if(errors){//Terjadinya kesalahan
-      return res.json({success: false, data: errors})
+    return res.json({success: false, data: errors})
   }else{
+      //Promise Cek Session->Daftar Universitas pengguna mahasiswa
+      //Promise Cek Session
+      const promiseSession = new Promise(function (resolve, reject){
+          sessionFunction.cek_status(req.body,function (callback) {
+              if(callback){
+                  console.log('berhasil session')
+                  resolve(true)
+              }else{
+                  reject(global.pesan_gagal.session);
+              }
+          })
+      });
 
+      //Promise Daftar Universitas
+      var daftarUniversitas;
+      const promiseDaftarUniversitas = function(session){
+          return new Promise(function(resolve, reject){
+              if(session){
+                  mahasiswaFunction.daftar_universitas(req.body, function(callback){
+                      if(arguments[0]){
+                          daftarUniversitas = arguments[1]
+                          resolve(true);
+                      }else{
+                          reject(global.pesan_gagal.daftar_universitas_mahasiswa);
+                      }
+                  })
+              }else{
+                  reject(global.pesan_gagal.daftar_universitas_mahasiswa)
+              }
+          })
+      }
 
+      //Atur Promise
+      const consumePromise = function(){
+          promiseSession
+              .then(promiseDaftarUniversitas)
+              .then(function () {
+                  return res.json({success: true, data: {message:global.pesan_berhasil.daftar_universitas_mahasiswa,data: daftarUniversitas}})
+              })
+              .catch(function(err) {
+                  return res.json({success: false, data: [{msg:err}]})
+              })
+      };
 
-    args = {
-      	data: {
-          access_token: req.body.accessToken},
-      	headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
-    };
-
-    rClient.post(base_api_url+'/cek_session', args, function (data, response) {
-        //Kelas.find({ _id:idKelas , pengajar: {$elemMatch:{mapel:idMapel,guru:idGuru}} }).exec(function (err, results) {
-
-        if(data.success == true){//session berlaku
-          var idPengguna = req.body.idPengguna
-
-
-            Pengguna.find({
-              $and:
-                [
-                  {'akademik.peran':4},
-                  {'_id':idPengguna}
-
-                ]
-            })
-           .exec(function (err, results) {
-
-             if (err) {
-               return res.json({success: false, data: err})
-             }else{
-
-               return res.json({success: true, data: results})
-             }
-
-           });
-
-        }else{//session tidak berlaku
-          return res.json({success: false, data: {message:data.data.message}})
-        }
-
-    })
-
+      consumePromise();
   }
 }
 
@@ -79,11 +89,10 @@ exports.tambah_institusi_pendidikan = function(req,res){
   //Inisial validasi
   req.checkBody('access_token', 'Akses token tidak boleh kosong').notEmpty();
   req.checkBody('pengguna', 'Id pengguna tidak boleh kosong').notEmpty();
-  req.checkBody('institusi', 'Id pengguna tidak boleh kosong').notEmpty();
-  req.checkBody('jenjang', 'Id pengguna tidak boleh kosong').notEmpty();
-  req.checkBody('prodi', 'Id pengguna tidak boleh kosong').notEmpty();
-  req.checkBody('nim', 'Id pengguna tidak boleh kosong').notEmpty();
-  req.checkBody('foto_ktm', 'Id pengguna tidak boleh kosong').notEmpty();
+  req.checkBody('institusi', 'Id institusi tidak boleh kosong').notEmpty();
+  req.checkBody('jenjang', 'Id jenjang tidak boleh kosong').notEmpty();
+  req.checkBody('prodi', 'Id prodi tidak boleh kosong').notEmpty();
+  req.checkBody('nim', 'NIM tidak boleh kosong').notEmpty();
 
   //Dibersihkan dari Special Character
   req.sanitize('access_token').escape();
@@ -92,7 +101,6 @@ exports.tambah_institusi_pendidikan = function(req,res){
   req.sanitize('jenjang').escape();
   req.sanitize('prodi').escape();
   req.sanitize('nim').escape();
-  req.sanitize('foto_ktm').escape();
 
   req.sanitize('access_token').trim();
   req.sanitize('pengguna').escape();
@@ -100,7 +108,6 @@ exports.tambah_institusi_pendidikan = function(req,res){
   req.sanitize('jenjang').trim();
   req.sanitize('prodi').trim();
   req.sanitize('nim').trim();
-  req.sanitize('foto_ktm').trim();
 
   //Menjalankan validasi
   var errors = req.validationErrors();
@@ -108,58 +115,47 @@ exports.tambah_institusi_pendidikan = function(req,res){
   if(errors){//Terjadinya kesalahan
       return res.json({success: false, data: errors})
   }else{
-
-    //Cek session
-    args = {
-      	data: {
-          access_token: req.body.access_token},
-      	headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
-    };
-
-    rClient.post(base_api_url+'/cek_session', args, function (data, response) {
-
-
-        if(data.success == true){//session berlaku
-
-          //Proses:
-          //1. Dicek dahulu apakah institusi, prodi, jenjang sudah ada dalam array
-          //2. Apabila sudah maka gagal menambahkan
-          //3. Apabila belum berhasil menambahkan
-          Pengguna.find({ _id:req.body.pengguna , 'akademik.universitas_prodi': {$elemMatch:{universitas:req.body.institusi,prodi:req.body.prodi,jenjang:req.body.jenjang}} }).exec(function (err, results) {
-
-            var count = results.length
-            if(count > 0){//institusi, prodi, jenjang sudah ada dalam array
-
-              return res.json({success: false, data: {message:'Gagal menambahkan Institusi pendidikan, karena sudah terdaftar sebelumnya.'}})
-
-            }else if(count == 0){//institusi, prodi, jenjang belum ada dalam array
-
-              Pengguna.update(
-                              { _id: req.body.pengguna },
-                              { $push: { 'akademik.universitas_prodi': {universitas: req.body.institusi, jenjang: req.body.jenjang, prodi: req.body.prodi, nim_nip: req.body.nim, foto_ktm_ktp: req.body.foto_ktm, status: 0} } }
-                          ).exec(function (err, results) {
-                            if(err){
-                             return res.json({success: false, data: {message:err}})
-                           }else{
-                             return res.json({success: true, data: {message:'Institusi Pendidikan Anda berhasil ditambahkan, silahkan menunggu untuk dikonfirmasi oleh Institusi Pendidikan.'}})
-                           }
-                          })
-
-            }
-
+      //Promise Cek Session->Menambahkan universitas kepada mahasiswa
+      //Promise Cek Session
+      const promiseSession = new Promise(function (resolve, reject){
+          sessionFunction.cek_status(req.body,function (callback) {
+              if(callback){
+                  resolve(true)
+              }else{
+                  reject(global.pesan_gagal.session);
+              }
           })
+      });
 
+      //Promise Menambahkan Universitas kepada mahasiswa
+      const promiseMenambahkanUniversitas = function(session){
+          return new Promise(function(resolve, reject){
+              if(session){
+                  mahasiswaFunction.menambahkan_institusi_prodi_jenjang(req.body, function(callback){
+                      if(arguments[0]){
+                          resolve(true);
+                      }else{
+                          reject(global.pesan_gagal.menambahkan_universitas);
+                      }
+                  })
+              }else{
+                  reject(global.pesan_gagal.menambahkan_universitas)
+              }
+          })
+      }
 
+      //Atur Promise
+      const consumePromise = function(){
+          promiseSession
+              .then(promiseMenambahkanUniversitas)
+              .then(function () {
+                  return res.json({success: true, data: {message:global.pesan_berhasil.menambahkan_universitas}})
+              })
+              .catch(function(err) {
+                  return res.json({success: false, data: [{msg:err}]})
+              })
+      };
 
-        }else{
-
-          return res.json({success: false, data: {message:data.data.message}})
-
-        }
-
-    })
-
-
+      consumePromise();
   }
-
 }

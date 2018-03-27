@@ -4,6 +4,7 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var UserSchema = Schema({
+  _id: { type: Schema.ObjectId, auto: true},
   email: {type: String, required: true},
   sandi: {type: String, required: true},
   profil:{
@@ -15,12 +16,12 @@ var UserSchema = Schema({
   akademik:{
     peran: {type: Number, required: true},
     universitas_prodi:[{
-      universitas: {type: Schema.ObjectId, ref: 'universitas'},
-      prodi: {type: Schema.ObjectId, ref: 'prodi'},
-      jenjang: {type: Schema.ObjectId, ref: 'jenjang'},
-      status_konfirmasi: {type: Number, default: 0},
-      foto_ktm_ktp: {type: String, default: '-'},
-      nim_nip: {type: String, default: '-'}
+        universitas: {type: Schema.ObjectId, ref: 'universitas'},
+        prodi: {type: Schema.ObjectId, ref: 'prodi'},
+        jenjang: {type: Schema.ObjectId, ref: 'jenjang'},
+        status_konfirmasi: {type: Number, default: 0},
+        nim_nip: {type: String},
+        kelompok: {type: Schema.ObjectId, ref: 'kelompok', default: null}
     }],
   },
   created_at: { type: Date, default: Date.now},

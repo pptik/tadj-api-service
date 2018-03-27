@@ -1,0 +1,46 @@
+{
+  "salt_password": "rBRiNjYtFa",
+  "pesan_berhasil":{
+    "ambil_profil" : "Berhasil mengambil data profil",
+    "ubah_profil" : "Profil pengguna berhasil diubah",
+    "ubah_sandi" : "Sandi pengguna berhasil diubah",
+    "daftar_pengguna" : "Berhasil mendaftarkan pengguna",
+    "login" : "Login berhasil",
+    "session" : "Berhasil mengembalikan status session",
+    "daftar_universitas_mahasiswa" : "Berhasil mengembalikan daftar universitas pengguna mahasiswa",
+    "jenjang_universitas" : "Berhasil mengembalikan jenjang universitas",
+    "prodi_universitas" : "Berhasil mengembalikan prodi universitas",
+    "menambahkan_universitas" : "Berhasil menambahkan universitas, prodi, dan jenjang",
+    "mahasiswa_dalam_universitas" : "Berhasil menampilkan mahasiswa dalam universitas",
+    "konfirmasi_mahasiswa" : "Berhasil mengkonfirmasi mahasiswa"
+  },
+  "pesan_gagal":{
+    "session" : "Token sudah tidak berlaku atau tidak ditemukan",
+    "ambil_profil" : "Profil pengguna tidak ditemukan",
+    "ubah_profil" : "Profil pengguna gagal diubah",
+    "ubah_sandi" : "Sandi pengguna gagal diubah",
+    "daftar_pengguna" : "Gagal mendaftarkan pengguna karena email atau username sudah terdaftar",
+    "daftar_universitas_mahasiswa" : "Gagal mengembalikan daftar universitas pengguna mahasiswa",
+    "jenjang_universitas" : "Gagal mengembalikan jenjang universitas",
+    "prodi_universitas" : "Gagal mengembalikan prodi universitas",
+    "menambahkan_universitas" : "Gagal menambahkan universitas, prodi, dan jenjang karena anda sebelumnya sudah terdaftar",
+    "mahasiswa_dalam_universitas" : "Gagal menampilkan mahasiswa dalam universitas",
+    "konfirmasi_mahasiswa" : "Gagal mengkonfirmasi mahasiswa"
+  },
+  "pesan_tidak_ditemukan":{
+    "universitas" : "Anda belum memilih universitas",
+    "jenjang" : "Anda belum memilih jenjang",
+    "prodi" : "Anda belum memilih prodi",
+    "semester" : "Anda belum memilih semester",
+    "jumlah_anggota" : "Anda belum memilih jumlah anggota",
+    "tahun_ajaran" : "Anda belum memilih tahun ajaran",
+    "jumlah_kelompok" : "Anda belum memilih jumlah kelompok"
+  },
+  "alamat_url":{
+    "self" : "http://localhost:3001"
+  },
+  "akun_email_bc":{
+    "user" : "no.reply.tadj@gmail.com",
+    "pass" : "321851re141"
+  }
+}

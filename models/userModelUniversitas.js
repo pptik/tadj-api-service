@@ -16,9 +16,23 @@ var UserSchema = Schema({
   akademik:{
     jenjang: [{type: Schema.ObjectId, ref: 'jenjang'}]    
   },
+  civitas: {
+    mahasiswa: [{
+        _id: { type: Schema.ObjectId, auto: true},
+        pengguna: {type: Schema.ObjectId, ref: 'pengguna'},
+        prodi: {type: Schema.ObjectId, ref: 'prodi'},
+        jenjang: {type: Schema.ObjectId, ref: 'jenjang'},
+        status_konfirmasi: {type: Number, default: 0},
+        nim_nip: {type: String},
+        kelompok: {type: Schema.ObjectId, ref: 'kelompok', default: null}
+    }],
+    dosen: [{
+        pengguna: {type: Schema.ObjectId, ref: 'pengguna'}
+    }]
+  },
   created_at: { type: Date, default: Date.now},
   updated_at: { type: Date, default: Date.now}
 },{collection: 'pengguna'});
 
 //Export model
-module.exports = mongoose.model('penggunaSiswa', UserSchema);
+module.exports = mongoose.model('penggunaUniversitas', UserSchema);

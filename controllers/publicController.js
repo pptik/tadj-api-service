@@ -1,5 +1,5 @@
 //Import model
-var Pengguna = require('../models/userModel');
+var Pengguna = require('../models/userModelMahasiswa');
 var Sekolah = require('../models/schoolModel');
 var Kelas = require('../models/classModel');
 var async = require('async');
