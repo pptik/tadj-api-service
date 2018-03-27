@@ -12,7 +12,8 @@
     "prodi_universitas" : "Berhasil mengembalikan prodi universitas",
     "menambahkan_universitas" : "Berhasil menambahkan universitas, prodi, dan jenjang",
     "mahasiswa_dalam_universitas" : "Berhasil menampilkan mahasiswa dalam universitas",
-    "konfirmasi_mahasiswa" : "Berhasil mengkonfirmasi mahasiswa"
+    "konfirmasi_mahasiswa" : "Berhasil mengkonfirmasi mahasiswa",
+    "kelompok_tambah" : "Berhasil menambahkan kelompok TA"
   },
   "pesan_gagal":{
     "session" : "Token sudah tidak berlaku atau tidak ditemukan",
@@ -25,10 +26,12 @@
     "prodi_universitas" : "Gagal mengembalikan prodi universitas",
     "menambahkan_universitas" : "Gagal menambahkan universitas, prodi, dan jenjang karena anda sebelumnya sudah terdaftar",
     "mahasiswa_dalam_universitas" : "Gagal menampilkan mahasiswa dalam universitas",
-    "konfirmasi_mahasiswa" : "Gagal mengkonfirmasi mahasiswa"
+    "konfirmasi_mahasiswa" : "Gagal mengkonfirmasi mahasiswa",
+    "kelompok_tambah" : "Gagal menambahkan kelompok TA"
   },
   "pesan_tidak_ditemukan":{
     "universitas" : "Anda belum memilih universitas",
+    "civitas_mahasiswa" : "Anda belum memilih civitas mahasiswa",
     "jenjang" : "Anda belum memilih jenjang",
     "prodi" : "Anda belum memilih prodi",
     "semester" : "Anda belum memilih semester",

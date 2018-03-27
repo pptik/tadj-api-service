@@ -2,6 +2,7 @@
 const userModelMahasiswa = require('../models/userModelMahasiswa');
 const userModelUniversitas = require('../models/userModelMahasiswa');
 const userModelUniversitasReal = require('../models/userModelUniversitas');
+const taGroupModel = require('../models/kelompokTAModel');
 
 //Import Library
 const restClient = require('node-rest-client').Client;
@@ -128,3 +129,67 @@ exports.daftar_mahasiswa_dalam_universitas = function (request, callback){
         });
 }
 
+exports.tambah_kelompok = function (request, callback) {
+    //1. Ambil no terakhir yang ada di DB -> 2. tambahkan satu untuk urutan selanjutnya
+    // 3. -> dilakukan pengulangan untuk membuat banyaknya kelompok TA -> 4. query save kelompok
+
+    //1.
+    taGroupModel.find({'universitas':request.universitas,
+                        'prodi':request.prodi,
+                        'semester': request.semester,
+                        'tahun_ajaran': request.tahun_ajaran
+                        })
+        .exec(function (err, results) {
+            /*if(err){
+                console.log("Error: "+err)
+            }*/
+
+            //2.
+            var counter;
+            if(results.length < 10){
+                counter = "00"+(results.length+1).toString();
+            }else if(results.length < 100){
+                counter = "0"+(results.length+1).toString();
+            }else if(results.length >= 100){
+                counter = (results.length+1).toString();
+            }
+
+            //3.
+            for(var a=0;a<request.jumlah_kelompok;a++){
+                //Menentukan Tahun Ajaran
+                var stringTahunAjaran = request.tahun_ajaran.split("/");
+                var stringTahunAjaranAwal = stringTahunAjaran[0].split("20");
+                var stringTahunAjaranAkhir = stringTahunAjaran[1].split("20");
+
+                //Menentukan Semester
+                var kodeSemester;
+                switch (request.semester){
+                    case "Ganjil":
+                        kodeSemester = "01";
+                        break;
+                    case "Genap":
+                        kodeSemester = "02";
+                        break;
+                }
+
+                var inputan = new taGroupModel(
+                    {
+                        no_kelompok: "TA"+stringTahunAjaranAwal[1]+stringTahunAjaranAkhir[1]+kodeSemester+counter,
+                        universitas: request.universitas,
+                        prodi: request.prodi,
+                        semester: request.semester,
+                        jumlah_anggota: request.jumlah_anggota,
+                        tahun_ajaran: request.tahun_ajaran
+                    }
+                );
+
+                inputan.save(function (err) {
+                    if (err) {
+                        callback(false,err)
+                    } else {
+                        callback(true)
+                    }
+                })
+            }
+        });
+}

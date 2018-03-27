@@ -20,8 +20,8 @@ const global = require('../global.json');
 exports.daftar_mahasiswa = function(req,res){
 
   //Inisial validasi
-  req.checkBody('access_token', 'Akses token tidak boleh kosong').notEmpty();
-  req.checkBody('universitas', 'Id universitas tidak boleh kosong').notEmpty();
+  req.checkBody('access_token', global.pesan_gagal.session).notEmpty();
+  req.checkBody('universitas', global.pesan_tidak_ditemukan.universitas).notEmpty();
 
   //Dibersihkan dari Special Character
   req.sanitize('access_token').escape();
@@ -87,8 +87,8 @@ exports.daftar_mahasiswa = function(req,res){
 exports.konfirmasi_mahasiswa = function(req,res){
 
     //Inisial validasi
-    req.checkBody('access_token', 'Akses token tidak boleh kosong').notEmpty();
-    req.checkBody('civitas_mahasiswa', 'Civitas mahasiswa tidak boleh kosong').notEmpty();
+    req.checkBody('access_token', global.pesan_gagal.session).notEmpty();
+    req.checkBody('civitas_mahasiswa', global.pesan_tidak_ditemukan.civitas_mahasiswa).notEmpty();
 
     //Dibersihkan dari Special Character
     req.sanitize('access_token').escape();
@@ -152,7 +152,7 @@ exports.konfirmasi_mahasiswa = function(req,res){
 exports.daftar = function(req,res) {
 
   //Inisial validasi
-  req.checkBody('access_token', 'Akses token tidak boleh kosong').notEmpty();
+  req.checkBody('access_token', global.pesan_gagal.session).notEmpty();
 
   //Dibersihkan dari Special Character
   req.sanitize('access_token').escape();
@@ -216,8 +216,8 @@ exports.daftar = function(req,res) {
 exports.pending_daftar_mahasiswa = function(req,res) {
 
   //Inisial validasi
-  req.checkBody('access_token', 'Akses token tidak boleh kosong').notEmpty();
-  req.checkBody('idUniversitas', 'Id universitas tidak boleh kosong').notEmpty();
+  req.checkBody('access_token', global.pesan_gagal.session).notEmpty();
+  req.checkBody('idUniversitas', global.pesan_tidak_ditemukan.universitas).notEmpty();
 
   //Dibersihkan dari Special Character
   req.sanitize('access_token').escape();
@@ -284,21 +284,19 @@ exports.kelompok_tambah = function (req,res) {
 
     //Dibersihkan dari Special Character
     req.sanitize('access_token').escape();
-    req.sanitize('civitas_mahasiswa').escape();
+    req.sanitize('universitas').escape();
     req.sanitize('jenjang').escape();
     req.sanitize('prodi').escape();
     req.sanitize('semester').escape();
     req.sanitize('jumlah_anggota').escape();
-    req.sanitize('tahun_ajaran').escape();
     req.sanitize('jumlah_kelompok').escape();
 
     req.sanitize('access_token').trim();
-    req.sanitize('civitas_mahasiswa').trim();
+    req.sanitize('universitas').trim();
     req.sanitize('jenjang').trim();
     req.sanitize('prodi').trim();
     req.sanitize('semester').trim();
     req.sanitize('jumlah_anggota').trim();
-    req.sanitize('tahun_ajaran').trim();
     req.sanitize('jumlah_kelompok').trim();
 
     //Menjalankan validasi
@@ -307,6 +305,50 @@ exports.kelompok_tambah = function (req,res) {
     if(errors){//Terjadinya kesalahan
         return res.json({success: false, data: errors})
     }else{
+        //Promise Cek Session->Tambah Kelompok TA pada universitas
+        //Promise Cek Session
+        const promiseSession = new Promise(function (resolve, reject){
+            sessionFunction.cek_status(req.body,function (callback) {
+                if(callback){
+                    console.log('berhasil session')
+                    resolve(true)
+                }else{
+                    reject(global.pesan_gagal.session);
+                }
+            })
+        });
 
+        //Promise Tambah Kelompok
+        //var daftarMahasiswa;
+        const promiseTambahKelompok = function(session){
+            return new Promise(function(resolve, reject){
+                if(session){
+                    institusiFunction.tambah_kelompok(req.body, function(callback){
+                        if(arguments[0]){
+                            //daftarMahasiswa = arguments[1]
+                            resolve(true);
+                        }else{
+                            reject(arguments[1]);
+                        }
+                    })
+                }else{
+                    reject(global.pesan_gagal.kelompok_tambah)
+                }
+            })
+        }
+
+        //Atur Promise
+        const consumePromise = function(){
+            promiseSession
+                .then(promiseTambahKelompok)
+                .then(function () {
+                    return res.json({success: true, data: {message:global.pesan_berhasil.kelompok_tambah}})
+                })
+                .catch(function(err) {
+                    return res.json({success: false, data: [{msg:err}]})
+                })
+        };
+
+        consumePromise();
     }
 }

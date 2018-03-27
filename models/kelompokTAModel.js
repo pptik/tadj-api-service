@@ -6,8 +6,8 @@ var KelompokTASchema = Schema({
   no_kelompok: {type: String, required: true},
   universitas: {type: Schema.ObjectId, ref: 'universitas', required: true},
   prodi: {type: Schema.ObjectId, ref: 'prodi', required: true},
-  semester: {type: Number, required: true},
-  kuota: {type: Number, default: 3},
+  semester: {type: String, required: true},
+  jumlah_anggota: {type: Number, default: 3},
   tahun_ajaran: {type: String, required: true},
   created_at: { type: Date, default: Date.now},
   updated_at: { type: Date, default: Date.now}
